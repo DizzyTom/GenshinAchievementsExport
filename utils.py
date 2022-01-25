@@ -1,4 +1,4 @@
-﻿import cv2
+import cv2
 import keyboard
 import numpy as np
 import pyautogui
@@ -90,17 +90,25 @@ def get_rects(image,mode='left'):
     frameworks.sort(key=lambda x:x[1])
     return frameworks
 
+LEFT_MD=(200,900)
+LEFT_MU=(200,200)
+RIGHT_MD=(1200,900)
+RIGHT_MU=(1200,200)
+def drag_to_top2(x1=1200,y1=900,x2=1200,y2=200):
+    pyautogui.moveTo(x1,y1)
+    pyautogui.dragTo(x2,y2,duration=1,tween=pyautogui.easeOutQuad,button='left')
+    pyautogui.click(x1,600)
+    pyautogui.click(10,10)
+    time.sleep(0.5)
 
 def drag_to_top(mode='right'):
     '''
     控制鼠标进行翻页
     '''
-    xpos=1200 if mode=='right' else 200
-    pyautogui.moveTo(xpos,900)
-    pyautogui.dragTo(xpos,200,duration=1,tween=pyautogui.easeOutQuad,button='left')
-    pyautogui.click(xpos,600)
-    pyautogui.click(10,10)
-    time.sleep(0.5)
+    if mode=='right':
+        drag_to_top2(RIGHT_MD[0],RIGHT_MD[1],RIGHT_MU[0],RIGHT_MU[1])
+    else:
+        drag_to_top2(LEFT_MD[0],LEFT_MD[1],LEFT_MU[0],LEFT_MU[1])
 
 
 END_image=cv2.imread('analysis/2.png',cv2.IMREAD_GRAYSCALE)
@@ -257,10 +265,14 @@ def compare_xlsx():
         if x!='未完成':
             del workbook_read[x]
     workbook_read.save('compare_ans.xlsx')
-def export_xlsx(Need_Speaker=False):
+def export_xlsx(Need_Speaker=True):
     '''
     导出表格
     '''
+    global LEFT_MD
+    global LEFT_MU
+    global RIGHT_MD
+    global RIGHT_MU
     def get_page(name):
         global worksheet_index
         if Need_Speaker:
@@ -310,6 +322,7 @@ def export_xlsx(Need_Speaker=False):
             image=pyautogui.screenshot()
             image=cv2.cvtColor(np.asarray(image),cv2.COLOR_RGB2BGR)
             frameworks=get_rects(image,'left') 
+            text=''
             for fw in frameworks:
                 text= get_left_rect_info(image,fw)
                 if not text in text_list:
@@ -335,9 +348,27 @@ def export_xlsx(Need_Speaker=False):
     worksheet_write.cell(1,5).value='达成情况'
     global worksheet_index
     worksheet_index=2
+    if Need_Speaker:
+        speak.Speak('程序启动，默认为管理员模式运行，若不是请退出，否则进入原神并按r键开始')
+
     keyboard.wait('r')
     if Need_Speaker:
-        speak.Speak('程序启动') 
+        speak.Speak('请将鼠标移动至左栏翻页起始点，并按tab键记录')
+    keyboard.wait('tab')
+    LEFT_MD=pyautogui.position()
+    if Need_Speaker:
+        speak.Speak('请将鼠标移动至左栏翻页结束点，并按tab键记录')
+    keyboard.wait('tab')
+    LEFT_MU=pyautogui.position()
+    if Need_Speaker:
+        speak.Speak('请将鼠标移动至右栏翻页起始点，并按tab键记录')
+    keyboard.wait('tab')
+    RIGHT_MD=pyautogui.position()
+    if Need_Speaker:
+        speak.Speak('请将鼠标移动至右栏翻页结束点，并按tab键记录')
+    keyboard.wait('tab')
+    RIGHT_MU=pyautogui.position()
+
     get_indexs()
 
 if __name__=='__main__':
