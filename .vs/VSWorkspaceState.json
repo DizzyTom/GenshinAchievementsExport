@@ -1,6 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\mytools",
+    "\\parameters"
   ],
+  "SelectedNode": "\\parameters\\parameters.json",
   "PreviewInSolutionExplorer": false
 }

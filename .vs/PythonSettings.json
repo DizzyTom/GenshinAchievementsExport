@@ -1,4 +1,5 @@
 {
   "TestFramework": "Pytest",
-  "Interpreter": "CondaEnv|CondaEnv|py37-paddle"
+  "Interpreter": "CondaEnv|CondaEnv|genshin_achievements",
+  "SuppressEnvironmentCreationPrompt": true
 }
