@@ -18,6 +18,6 @@ scroll表示滚动距离（一般在40左右，可以以5为单位微调）。
 ![Image text](https://raw.githubusercontent.com/DizzyTom/GenshinAchievementsExport/main/INTRODUCE/%E4%BA%A4%E4%BA%92%E6%95%88%E6%9E%9C.png)
 按 ’ESC‘键 可以退出交互。
 
-实现了截图到result文件夹的功能。
+实现了获取所有截图到result文件夹的功能。->get_imgs.py
 
-实现了提取图中文字到excel，及成就比对。
+实现了提取图中文字到excel，及成就比对。->rcg_imgs.py
