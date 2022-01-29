@@ -35,6 +35,5 @@ class VRBS:
         self.img_cnt=0
         if not os.path.exists('result'):
             os.makedirs('result')
-        for x in os.listdir('result'):
-            os.remove(os.path.join('result',x))
+        
 vrbs=VRBS()

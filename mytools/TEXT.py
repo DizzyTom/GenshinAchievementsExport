@@ -49,8 +49,16 @@ def CH_EN(txt):
         if not is_other(x):
             ans+=x 
     return ans
+
 def Find(a):
     dis=[]
     for name in vrbs.LIST_NAMES:
         dis.append(minDistance(CH_EN(a),CH_EN(name)))
     return vrbs.LIST_NAMES[dis.index(min(dis))]
+
+def Find2(a,b, LISTA, LISTB):
+    dis=[]
+    for namea,nameb in zip(LISTA,LISTB):
+        dis.append(minDistance(CH_EN(a+b),CH_EN(namea+nameb)))
+    index=dis.index(min(dis))
+    return LISTA[index],LISTB[index]
