@@ -17,3 +17,10 @@ def filter_rects(rects,area,minw,maxw,minh,maxh):
         if cross_2rects(rect,area) and minw<rect[2]<maxw and minh<rect[3]<maxh:
             ans.append(rect)
     return ans
+
+def short_rects(rects):
+    ans=[]
+    for rect in rects:
+        if not cross_rects(rect,ans):
+            ans.append(rect)
+    return ans

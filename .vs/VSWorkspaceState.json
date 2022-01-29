@@ -1,9 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\mytools",
-    "\\parameters"
+    "\\parameters",
+    "\\resource"
   ],
-  "SelectedNode": "\\parameters\\parameters.json",
+  "SelectedNode": "\\requirements.txt",
   "PreviewInSolutionExplorer": false
 }

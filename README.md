@@ -11,7 +11,11 @@
 如果不一样，按照下面的步骤操作。
 首先，截取一张类似parameters/screen_shot.png 的图。把原图覆盖掉。
 ![Image text](https://raw.githubusercontent.com/DizzyTom/GenshinAchievementsExport/main/parameters/screen_shot.png)
+运行just_paras.py会出现图形界面，分为左右两个调整部分。
 l,r分别代表左和右。 x1,y1,x2,y2为矩形区域的端点坐标。w,h 分别表示过滤有具体成就内容矩形的宽度和高度。ratio用来控制分界线。
+scroll表示滚动距离（一般在40左右，可以以5为单位微调）。
 通过滑动滑块来调整参数(会自动保存），最终达到的效果如INTRODUCE/交互效果.png。
 ![Image text](https://raw.githubusercontent.com/DizzyTom/GenshinAchievementsExport/main/INTRODUCE/%E4%BA%A4%E4%BA%92%E6%95%88%E6%9E%9C.png)
 按 ’ESC‘键 可以退出交互。
+
+实现了截图到result文件夹的功能。

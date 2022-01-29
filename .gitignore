@@ -130,3 +130,6 @@ dmypy.json
 
 # Visual Studio
 .vs/
+
+# My Project
+result/

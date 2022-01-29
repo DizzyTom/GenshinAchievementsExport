@@ -5,7 +5,7 @@ def draw_rect(image,bbox,color,thick=2):
     cv2.rectangle(image,(bbox[0],bbox[1]),(bbox[0]+bbox[2],bbox[1]+bbox[3]),color,thick)
 def onChange(data):
     for k in data.keys():
-        trackbar_window_name= left_trackbar_window_name if 'l' in k else right_trackbar_window_name
+        trackbar_window_name= left_trackbar_window_name if 'l'==k[0] else right_trackbar_window_name
         pos=cv2.getTrackbarPos(k, trackbar_window_name)
         if pos>0:
             data[k]=pos
@@ -35,7 +35,7 @@ if __name__=='__main__':
     cv2.resizeWindow(image_window_name,1280,800)
 
     for i,(k,v) in enumerate(data.items()):
-        trackbar_window_name= left_trackbar_window_name if 'l' in k else right_trackbar_window_name
+        trackbar_window_name= left_trackbar_window_name if 'l'==k[0] else right_trackbar_window_name
         count= image_width if i%2==0 else image_height
         cv2.createTrackbar(k, trackbar_window_name, v, count, onChange)
     red=(0,0,255)
@@ -61,7 +61,7 @@ if __name__=='__main__':
             cv2.line(image_show,(rect[0]+int(l_ratio*rect[2]),rect[1]),(rect[0]+int(l_ratio*rect[2]),rect[1]+rect[3]),yellow,2)
         for rect in right_rects:
             draw_rect(image_show,rect,light_blue)
-            r_ratio=data['r_ratio']/image_height
+            r_ratio=data['r_ratio']/image_width
             cv2.line(image_show,(rect[0]+int(r_ratio*rect[2]),rect[1]),(rect[0]+int(r_ratio*rect[2]),rect[1]+rect[3]),yellow,2)
         cv2.imshow(image_window_name,image_show)
         if cv2.waitKey(1)==27:
