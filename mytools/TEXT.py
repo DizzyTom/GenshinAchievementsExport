@@ -50,15 +50,15 @@ def CH_EN(txt):
             ans+=x 
     return ans
 
-def Find(a):
+def Find(a,LIST=vrbs.LIST_NAMES):
     dis=[]
-    for name in vrbs.LIST_NAMES:
+    for name in LIST:
         dis.append(minDistance(CH_EN(a),CH_EN(name)))
-    return vrbs.LIST_NAMES[dis.index(min(dis))]
+    return LIST[dis.index(min(dis))]
 
-def Find2(a,b, LISTA, LISTB):
+def Find2(a,b,lista,listb):
     dis=[]
-    for namea,nameb in zip(LISTA,LISTB):
+    for namea,nameb in zip(lista,listb):
         dis.append(minDistance(CH_EN(a+b),CH_EN(namea+nameb)))
     index=dis.index(min(dis))
-    return LISTA[index],LISTB[index]
+    return lista[index],listb[index]

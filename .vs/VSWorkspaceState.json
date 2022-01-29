@@ -1,9 +1,10 @@
 {
   "ExpandedNodes": [
     "",
+    "\\mytools",
     "\\parameters",
     "\\resource"
   ],
-  "SelectedNode": "\\requirements.txt",
+  "SelectedNode": "\\README.md",
   "PreviewInSolutionExplorer": false
 }

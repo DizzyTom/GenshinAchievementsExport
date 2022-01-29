@@ -14,6 +14,21 @@ def onChange(data):
     with open(json_path,'w',encoding='utf-8') as f:
         json.dump(data,f)
     return data
+def onChange2(data):
+    l_pos= cv2.getTrackbarPos('lower','image_canny')
+    if l_pos>0:
+        data['lower']=l_pos
+    else:
+        return data
+    r_pos= cv2.getTrackbarPos('upper','image_canny')
+    if r_pos>0:
+        data['upper']=r_pos
+    else:
+        return data
+    with open('parameters/canny.json','w',encoding='utf-8') as f:
+        json.dump(data,f)
+    return data
+
 if __name__=='__main__':
     json_path='parameters/parameters.json' 
     image_path='parameters/screen_shot.png'
@@ -22,7 +37,9 @@ if __name__=='__main__':
     right_trackbar_window_name='Right_Trackbars'
     with open(json_path,'r',encoding='utf-8') as f:
         data=json.load(f)
-
+    with open('parameters/canny.json','r',encoding='utf-8') as f:
+        data2=json.load(f)
+        #print(data2)
     image=cv2.imread(image_path,cv2.IMREAD_COLOR)
     image_height=image.shape[0]
     image_width=image.shape[1]
@@ -33,11 +50,15 @@ if __name__=='__main__':
     cv2.resizeWindow(right_trackbar_window_name, 800,600)
     cv2.namedWindow(image_window_name,cv2.WINDOW_NORMAL)
     cv2.resizeWindow(image_window_name,1280,800)
+    cv2.namedWindow('image_canny',0)
+    cv2.resizeWindow('image_canny',1280,800)
 
     for i,(k,v) in enumerate(data.items()):
         trackbar_window_name= left_trackbar_window_name if 'l'==k[0] else right_trackbar_window_name
         count= image_width if i%2==0 else image_height
         cv2.createTrackbar(k, trackbar_window_name, v, count, onChange)
+    cv2.createTrackbar('lower','image_canny',data2['lower'],255,onChange2)
+    cv2.createTrackbar('upper','image_canny',data2['upper'],255,onChange2)
     red=(0,0,255)
     blue=(255,0,0)
     green=(0,255,0)
@@ -45,12 +66,15 @@ if __name__=='__main__':
     yellow=(0,255,255)
     while True:
         data=onChange(data)
+        data2=onChange2(data2)
         image_show=image.copy()
         left_area=[data['l_x1'],data['l_y1'],data['l_x2']-data['l_x1'],data['l_y2']-data['l_y1']]
         right_area=[data['r_x1'],data['r_y1'],data['r_x2']-data['r_x1'],data['r_y2']-data['r_y1']]
         draw_rect(image_show,left_area,blue)
         draw_rect(image_show,right_area,green)
-        image_canny=cv2.Canny(image,50,100)
+        image_gray=cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
+        image_canny=cv2.Canny(image_gray,data2['lower'],data2['upper'])
+        cv2.imshow('image_canny',image_canny)
         contours=cv2.findContours(image_canny,cv2.CHAIN_APPROX_SIMPLE,cv2.RETR_CCOMP)[0]
         rects=[cv2.cv2.boundingRect(contour) for contour in contours]
         left_rects= filter_rects(rects,left_area,data['l_min_w'],data['l_max_w'],data['l_min_h'],data['l_max_h'])

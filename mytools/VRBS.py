@@ -28,6 +28,10 @@ class VRBS:
         self.left_area=[data['l_x1'],data['l_y1'],data['l_x2']-data['l_x1'],data['l_y2']-data['l_y1']]
         self.right_area=[data['r_x1'],data['r_y1'],data['r_x2']-data['r_x1'],data['r_y2']-data['r_y1']]
         
+        with open('parameters/canny.json','r',encoding='utf-8') as f:
+            data=json.load(f)
+        self.L_TH=data['lower']
+        self.U_TH=data['upper']
         with open('resource/已知栏目.txt','r') as f:
             txt=f.readlines()
         self.LIST_NAMES=[x.strip() for x in txt]

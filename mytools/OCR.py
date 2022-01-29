@@ -4,7 +4,7 @@ from .RECTS import *
 from paddleocr import PaddleOCR
 import cv2
 import numpy as np
-from .TEXT import Find, Find2
+from .TEXT import Find,Find2
 from .ACTION import rscroll, screen_shot
 import os
 import openpyxl
@@ -19,7 +19,8 @@ def Image2Result(image):
     return texts
 def get_left_infos(image):
     image=cv2.cvtColor(np.asarray(image),cv2.COLOR_RGB2BGR)
-    image_canny=cv2.Canny(image,50,100)
+    image_gray=cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
+    image_canny=cv2.Canny(image_gray, vrbs.L_TH ,vrbs.U_TH)
     contours=cv2.findContours(image_canny,cv2.CHAIN_APPROX_SIMPLE,cv2.RETR_CCOMP)[0]
     rects=[cv2.cv2.boundingRect(contour) for contour in contours]
     left_rects= filter_rects(rects,vrbs.left_area,vrbs.LNW, vrbs.LXW ,vrbs.LNH , vrbs.LXH)
@@ -49,7 +50,8 @@ def get_right_images(name):
             os.remove('result/'+str( vrbs.img_cnt )+'_'+name+'.png')
             break
 def get_right_infos(image):
-    image_canny=cv2.Canny(image,50,100)
+    image_gray=cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
+    image_canny=cv2.Canny(image_gray, vrbs.L_TH ,vrbs.U_TH)
     contours=cv2.findContours(image_canny,cv2.CHAIN_APPROX_SIMPLE,cv2.RETR_CCOMP)[0]
     rects=[cv2.cv2.boundingRect(contour) for contour in contours]
     right_rects= filter_rects(rects,vrbs.right_area,vrbs.RNW, vrbs.RXW ,vrbs.RNH , vrbs.RXH)
@@ -72,7 +74,7 @@ def get_right_infos(image):
         results=Image2Result( image[up:down,mid:right])
         dacheng='未达成'
         for result in results:
-            if result=='达成':
+            if result=='达成' or '总计' in result:
                 dacheng='达成'
         texts.append(text)
         infos.append(info)
@@ -82,20 +84,25 @@ def get_right_infos(image):
 
 def get_right_all_infos():
     workbook= openpyxl.load_workbook('resource/achievements.xlsx')
-    worksheet=workbook['Full']
+    worksheet=workbook['正式服成就汇总']
     max_row= worksheet.max_row
+    tejis=[]
     achievements=[]
     all_infos=[]
-    for i in range(1,max_row):
-        text=worksheet.cell(i+1,2).value
-        info=worksheet.cell(i+1,3).value
-        if not text in achievements:
+    for i in range(2,max_row-1):
+        teji=worksheet.cell(i+1,5).value
+        text=worksheet.cell(i+1,6).value
+        info=worksheet.cell(i+1,7).value
+        if teji==None:
+            continue
+        if text not in achievements:
+            tejis.append(teji)
             achievements.append(text)
             all_infos.append(info)
         else:
-            all_infos[ achievements.index(text)]=info
+            all_infos[achievements.index(text)]=info
     all_dacheng=['未达成']*len( achievements)
-
+    
     workbook= openpyxl.Workbook()
     worksheet=workbook.create_sheet('已完成')
     del workbook['Sheet']
@@ -116,9 +123,12 @@ def get_right_all_infos():
         name=single_file.split('.')[0].split('_')[1]
         texts,infos,dachengs=get_right_infos(image)
         for text,info,dacheng in zip(texts,infos,dachengs):
+            text,info=Find2(text,info, achievements, all_infos) 
             if not text in text_list:
                 print(text,info,dacheng)
-                text,info=Find2(text,info, achievements , all_infos)                
+                #print( achievements)
+                
+                
                 text_list.append(text)
                 name_list.append(name)
                 info_list.append(info)
@@ -129,7 +139,7 @@ def get_right_all_infos():
                 worksheet.cell(worksheet_index,2).value=text
                 worksheet.cell(worksheet_index,3).value=info
                 worksheet.cell(worksheet_index,4).value=dacheng
-                workbook.save('成就.xlsx')
+                workbook.save('my_achievements.xlsx')
                 worksheet_index+=1
     worksheet=workbook.create_sheet('未完成')
     worksheet_index=1
@@ -137,7 +147,8 @@ def get_right_all_infos():
     for i,x in enumerate(all_dacheng):
         if x=='未达成':
             print(achievements[i],all_infos[i])
-            worksheet.cell(worksheet_index,1).value= achievements[i]
-            worksheet.cell(worksheet_index,2).value= all_infos[i]
+            worksheet.cell(worksheet_index,1).value= tejis[i]
+            worksheet.cell(worksheet_index,2).value= achievements[i]
+            worksheet.cell(worksheet_index,3).value= all_infos[i]
             worksheet_index+=1
         workbook.save('my_achievements.xlsx')

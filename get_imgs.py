@@ -3,6 +3,7 @@ import keyboard
 import ctypes
 from mytools.OCR import get_left_infos
 from mytools.OCR import get_right_images
+import os
 def main():
     text_list=[]
     while True: 
@@ -20,6 +21,8 @@ def main():
             lscroll()
 if __name__=='__main__':
     if ctypes.windll.shell32.IsUserAnAdmin():
+        for x in os.listdir('result'):
+            os.remove('result/'+x)
         print("按r开始")
         keyboard.wait('r')
         main()
