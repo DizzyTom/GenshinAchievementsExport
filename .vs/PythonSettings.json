@@ -1,5 +1,0 @@
-{
-  "TestFramework": "Pytest",
-  "Interpreter": "CondaEnv|CondaEnv|genshin_achievements",
-  "SuppressEnvironmentCreationPrompt": true
-}

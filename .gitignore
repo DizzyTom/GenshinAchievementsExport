@@ -130,6 +130,8 @@ dmypy.json
 
 # Visual Studio
 .vs/
+# PyCharm
+.idea/
 
 # My Project
 result/
